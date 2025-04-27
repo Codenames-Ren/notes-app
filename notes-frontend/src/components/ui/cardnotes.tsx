@@ -10,13 +10,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "./textarea";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Plus, X, Edit, Save, Trash2 } from "lucide-react";
+import { Plus, X, Edit, Save, Trash2, Pencil } from "lucide-react";
 
 // Tipe data untuk struktur notes - sesuaikan dengan struktur API Anda
 type Note = {
@@ -65,6 +78,16 @@ export default function CardNotes({ delay = 0 }) {
     setEditContent("");
   };
 
+  // Fungsi untuk update notes
+  const handleUpdateNotes = () => {
+    console.log("Updating notes...");
+  };
+
+  // Fungsi untuk delete notes
+  const handleDeleteNotes = () => {
+    console.log("Deleting notes...");
+  };
+
   return (
     <motion.div
       ref={ref}
@@ -74,7 +97,7 @@ export default function CardNotes({ delay = 0 }) {
       className="w-full"
     >
       <Card className="w-full max-w-sm my-3 mx-auto dark:bg-cyan-700">
-        <CardHeader>
+        <CardHeader className="relative">
           <div className="flex items-center gap-4">
             <Avatar>
               <AvatarImage src="/bronya.jpeg" alt="@shadcn" />
@@ -86,6 +109,30 @@ export default function CardNotes({ delay = 0 }) {
               <CardDescription>
                 Create and manage your personal notes
               </CardDescription>
+            </div>
+
+            {/* Tombol Update dan Delete di bagian atas kanan */}
+            <div className="absolute bottom-8.5 right-4 flex gap-2">
+              <Button
+                size="sm"
+                variant="neutral"
+                onClick={handleUpdateNotes}
+                className="h-8 w-8 p-0 dark:bg-gray-700 bg-yellow-400 mx-1"
+                disabled={!username.trim()}
+                title="Update Notes"
+              >
+                <Pencil size={16} />
+              </Button>
+              <Button
+                size="sm"
+                variant="neutral"
+                onClick={handleDeleteNotes}
+                className="h-8 w-8 p-0 dark:bg-gray-700 bg-red-300"
+                disabled={!username.trim()}
+                title="Delete Notes"
+              >
+                <Trash2 size={16} />
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -150,9 +197,34 @@ export default function CardNotes({ delay = 0 }) {
                                 >
                                   <Edit size={16} className="mr-1" /> Edit
                                 </Button>
-                                <Button size="sm" variant="neutral">
-                                  <Trash2 size={16} className="mr-1" /> Delete
-                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button size="sm" variant="neutral">
+                                      <Trash2 size={16} className="mr-1" />{" "}
+                                      Delete
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Are you absolutely sure?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone. This will
+                                        permanently delete your notes and remove
+                                        your data from our servers.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Cancel
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction>
+                                        Continue
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
                               </div>
                             </div>
                           )}
